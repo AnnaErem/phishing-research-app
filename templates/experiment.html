@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Эксперимент</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .experiment-container {
+            display: flex;
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .timer-panel {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .timer-warning {
+            background: #ff4444;
+            color: white;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.02); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .email-viewer {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .email-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .sender-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .sender-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .expand-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            color: #6c757d;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .expand-btn:hover {
+            background: #e9ecef;
+        }
+        .sender-full-email {
+            display: none;
+            color: #6c757d;
+            font-size: 13px;
+            margin-top: 5px;
+            word-break: break-all;
+        }
+        .sender-full-email.visible {
+            display: block;
+        }
+        .email-subject {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #212529;
+        }
+        .email-body {
+            padding: 25px;
+            font-size: 15px;
+            line-height: 1.6;
+            min-height: 250px;
+            background: white;
+        }
+        .email-footer {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 10px;
+        }
+        .attachment-badge, .link-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #e7f1ff;
+            color: #0d6efd;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .attachment-badge:hover, .link-badge:hover {
+            background: #cfe2ff;
+            transform: translateY(-1px);
+        }
+        .phishing-warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #856404;
+        }
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: white;
+            border-top: 1px solid #e9ecef;
+        }
+        .email-counter {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .btn-primary {
+            background: #0d6efd;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            background: #0b5ed7;
+        }
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #198754;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .completion-message {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if has_timer %}
+        <div class="timer-panel" id="timer-display">03:00</div>
+        {% endif %}
+
+        <div class="experiment-container">
+            <div class="email-viewer" id="email-viewer">
+                <div class="email-header">
+                    <div class="sender-info">
+                        <span class="sender-name" id="sender-name"></span>
+                        <button class="expand-btn" id="expand-btn" onclick="toggleSender()">▼</button>
+                        <span style="font-size: 12px; color: #999; margin-left: 0px;">Показать адрес отправителя</span>
+                    </div>
+                    <div class="sender-full-email" id="sender-email"></div>
+                    <div class="email-subject" id="email-subject"></div>
+                </div>
+                <div class="email-body" id="email-body"></div>
+                <div class="email-footer" id="email-footer"></div>
+                <div class="navigation">
+                    <span class="email-counter" id="email-counter"></span>
+                    <button class="btn-primary" id="next-btn" onclick="nextEmail()">Следующее письмо →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Данные писем из Flask (передаются из бэкенда)
+        const emails = {{ emails | tojson }};
+        let currentIndex = 0;
+        let senderExpanded = false;
+        let timerInterval = null;
+        let timeLeft = {{ timer_limit if has_timer else 0 }};
+        let timerExpired = false;
+
+        function loadEmail(index) {
+            if (index >= emails.length) {
+                // Завершение эксперимента
+                if (timerInterval) clearInterval(timerInterval);
+                document.getElementById('email-viewer').innerHTML = `
+                    <div class="completion-message">
+                        <h2>✅ Эксперимент завершён</h2>
+                        <p>Спасибо за участие!</p>
+                        <a href="{{ url_for('thank_you') }}" class="btn-primary">Завершить</a>
+                    </div>
+                `;
+                return;
+            }
+
+            const email = emails[index];
+            document.getElementById('sender-name').innerHTML = email.sender_name;
+            document.getElementById('sender-email').innerHTML = email.sender_email || 'адрес не указан';
+            document.getElementById('sender-email').classList.remove('visible');
+            document.getElementById('email-subject').innerHTML = email.subject;
+
+            let bodyHtml = email.body.replace(/\n/g, '<br>');
+            document.getElementById('email-body').innerHTML = bodyHtml;
+
+            document.getElementById('email-counter').innerHTML = `Письмо ${index+1} из ${emails.length}`;
+
+            // Кнопки вложений/ссылок
+            let footerHtml = '';
+            if (email.has_attachment) {
+                footerHtml += `<span class="attachment-badge" onclick="handleAttachment(${email.id})">📎 Вложение: ${email.attachment_name || 'файл'}</span>`;
+            }
+            if (email.has_link) {
+                footerHtml += `<span class="link-badge" onclick="handleLink(${email.id}, '${email.link_url || ''}')">🔗 Ссылка: ${email.link_text || 'перейти'}</span>`;
+            }
+            document.getElementById('email-footer').innerHTML = footerHtml;
+
+            senderExpanded = false;
+        }
+
+        function toggleSender() {
+            const emailEl = document.getElementById('sender-email');
+            const btn = document.getElementById('expand-btn');
+            senderExpanded = !senderExpanded;
+            if (senderExpanded) {
+                emailEl.classList.add('visible');
+                btn.innerHTML = '▲';
+            } else {
+                emailEl.classList.remove('visible');
+                btn.innerHTML = '▼';
+            }
+            logAction(currentIndex+1, 'expand_sender');
+        }
+
+        function handleAttachment(emailId) {
+            showNotification('📎 Вложение открыто (симуляция)');
+            logAction(emailId, 'click_attachment');
+        }
+
+        function handleLink(emailId, url) {
+            if (url && url.includes('@')) {
+                showNotification('⚠️ Внимание: ссылка ведёт на внешний ресурс! (симуляция)');
+            } else {
+                showNotification('🔗 Ссылка открыта (симуляция)');
+            }
+            logAction(emailId, 'click_link');
+        }
+
+        function nextEmail() {
+            currentIndex++;
+            loadEmail(currentIndex);
+        }
+
+        function logAction(emailNumber, actionType) {
+            fetch('/log_action', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email_number: emailNumber, action_type: actionType })
+            }).catch(err => console.warn('Logging failed', err));
+        }
+
+        function showNotification(msg) {
+            const n = document.getElementById('notification');
+            n.innerHTML = msg;
+            n.style.display = 'block';
+            setTimeout(() => { n.style.display = 'none'; }, 2000);
+        }
+
+        {% if has_timer %}
+        function updateTimer() {
+            if (timerExpired) return;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timerExpired = true;
+                document.getElementById('timer-display').innerHTML = '00:00';
+                alert('⏱ Время вышло! Эксперимент завершён.');
+                window.location.href = "{{ url_for('thank_you') }}";
+                return;
+            }
+            const mins = Math.floor(timeLeft / 60);
+            const secs = timeLeft % 60;
+            document.getElementById('timer-display').innerHTML = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+            if (timeLeft <= 30) {
+                document.getElementById('timer-display').classList.add('timer-warning');
+            }
+            timeLeft--;
+        }
+        timerInterval = setInterval(updateTimer, 1000);
+        {% endif %}
+
+        loadEmail(0);
+    </script>
+</body>
+</html>

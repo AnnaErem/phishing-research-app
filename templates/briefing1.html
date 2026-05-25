@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Брифинг исследования</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="briefing-card">
+            <h1>Исследование корпоративных коммуникаций</h1>
+            <div class="briefing-content">
+                <p>Здравствуйте!</p>
+                <p>Мы приглашаем Вас принять участие в исследовании, посвященном особенностям цифровой рабочей коммуникации и взаимодействию сотрудников с корпоративными сообщениями.</p>
+
+                <h3>Исследование состоит из двух этапов:</h3>
+                <ol>
+                    <li><strong>Короткий опрос</strong> о Вашем опыте рабочей коммуникации</li>
+                    <li><strong>Небольшое практическое задание</strong>, моделирующее работу с корпоративной электронной почтой</li>
+                </ol>
+
+                <p>Исследование является анонимным: все данные будут использоваться только в обобщенном виде в исследовательских целях.</p>
+                <p>Прохождение опроса и задания суммарно займет около <strong>7–10 минут</strong>.</p>
+            </div>
+            <a href="{{ url_for('questionnaire') }}" class="btn-primary">Приступить к анкете</a>
+        </div>
+    </div>
+</body>
+</html>

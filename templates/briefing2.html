@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Инструкция к эксперименту</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .timer-notice {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .warning-box {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 12px 15px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="briefing-card">
+            <h2>Инструкция к эксперименту</h2>
+            <div class="briefing-content">
+                <p>Сейчас вы увидите симулированный интерфейс корпоративной почты.</p>
+
+                <h3>Что нужно делать:</h3>
+                <ul>
+                    <li>Просматривайте письма так, как вы делаете это обычно</li>
+                    <li>Для перехода к следующему письму нажимайте кнопку <strong>«Следующее письмо»</strong></li>
+                    <li>Вы можете взаимодействовать со ссылками и вложениями</li>
+                    <li>Адрес отправителя можно развернуть, нажав на стрелку рядом с именем</li>
+                </ul>
+
+                {% if high_status %}
+                <div class="warning-box">
+                    <strong>📌 Особенность задания:</strong> Все письма в эксперименте поступили от <strong>вышестоящих коллег и руководства</strong>.
+                </div>
+                {% endif %}
+
+                {% if has_timer %}
+                <div class="timer-notice">
+                    <strong>⏱ Ограничение времени:</strong> На выполнение задания отведено <strong>3 минуты</strong>.
+                    На экране будет отображаться таймер обратного отсчёта.
+                </div>
+                {% else %}
+                <div class="timer-notice">
+                    <strong>⏳ Без ограничения времени:</strong> Вы можете работать в комфортном темпе.
+                </div>
+                {% endif %}
+
+                <p>Когда будете готовы, нажмите кнопку ниже.</p>
+            </div>
+            <a href="{{ url_for('experiment') }}" class="btn-primary">Начать эксперимент</a>
+        </div>
+    </div>
+</body>
+</html>

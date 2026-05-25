@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анкета исследования</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .questionnaire-card {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .question p {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .likert-scale {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .likert-scale label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+            text-align: center;
+            width: 70px;
+        }
+        .likert-scale input {
+            margin-bottom: 5px;
+        }
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 8px;
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        hr {
+            margin: 20px 0;
+        }
+        .section-title {
+            background: #f0f4f8;
+            padding: 10px;
+            margin: 20px 0 15px 0;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="questionnaire-card">
+            <h2>Анкета участника</h2>
+            <p style="color: #666; margin-bottom: 20px;">Пожалуйста, ответьте на все вопросы. Исследование анонимно.</p>
+
+            <form method="POST" id="questionnaire-form" action="{{ url_for('questionnaire') }}">
+                <!-- Вопросы 1-2: Скрининг -->
+                <div class="question">
+                    <p>1. Являетесь ли Вы в настоящее время наёмным работником?</p>
+                    <div class="radio-group">
+                        <label><input type="radio" name="q1" value="yes" required> Да</label>
+                        <label><input type="radio" name="q1" value="no"> Нет</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p>2. Используете ли Вы корпоративную электронную почту в рабочих целях?</p>
+                    <div class="radio-group">
+                        <label><input type="radio" name="q2" value="daily" required> Да, ежедневно</label>
+                        <label><input type="radio" name="q2" value="weekly"> Да, несколько раз в неделю</label>
+                        <label><input type="radio" name="q2" value="rarely"> Редко</label>
+                        <label><input type="radio" name="q2" value="no"> Нет</label>
+                    </div>
+                </div>
+
+                <!-- Основные вопросы -->
+                <div class="question">
+                    <p>3. Сколько рабочих писем вы получаете в день в среднем?</p>
+                    <div class="radio-group">
+                        <label><input type="radio" name="q3" value="0-5" required> 0–5 писем</label>
+                        <label><input type="radio" name="q3" value="6-15"> 6–15 писем</label>
+                        <label><input type="radio" name="q3" value="16-30"> 16–30 писем</label>
+                        <label><input type="radio" name="q3" value="31-50"> 31–50 писем</label>
+                        <label><input type="radio" name="q3" value="51-100"> 51–100 писем</label>
+                        <label><input type="radio" name="q3" value="100-200"> 100-200 писем</label>
+                        <label><input type="radio" name="q3" value="200+"> Более 200 писем</label>
+                        <label><input type="radio" name="q3" value="dont_know"> Затрудняюсь ответить</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p>4. Как часто вы чувствуете нехватку времени при обработке сообщений?</p>
+                    <div class="radio-group">
+                        <label><input type="radio" name="q4" value="constantly" required> Постоянно</label>
+                        <label><input type="radio" name="q4" value="often"> Часто</label>
+                        <label><input type="radio" name="q4" value="periodically"> Периодически</label>
+                        <label><input type="radio" name="q4" value="rarely"> Редко</label>
+                        <label><input type="radio" name="q4" value="never"> Никогда</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p>5. Как часто вам приходится отвечать на сообщения параллельно другим задачам?</p>
+                    <div class="radio-group">
+                        <label><input type="radio" name="q5" value="constantly" required> Постоянно</label>
+                        <label><input type="radio" name="q5" value="often"> Часто</label>
+                        <label><input type="radio" name="q5" value="periodically"> Периодически</label>
+                        <label><input type="radio" name="q5" value="rarely"> Редко</label>
+                        <label><input type="radio" name="q5" value="never"> Никогда</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p>6. Насколько часто поток сообщений мешает сосредоточенной работе?</p>
+                    <div class="radio-group">
+                        <label><input type="radio" name="q6" value="constantly" required> Постоянно</label>
+                        <label><input type="radio" name="q6" value="often"> Часто</label>
+                        <label><input type="radio" name="q6" value="periodically"> Периодически</label>
+                        <label><input type="radio" name="q6" value="rarely"> Редко</label>
+                        <label><input type="radio" name="q6" value="never"> Никогда</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p>7. Какую долю рабочего времени вы проводите в офисе?</p>
+                    <div class="radio-group">
+                        <label><input type="radio" name="q7" value="80-100" required> 80-100% (почти каждый день в офисе)</label>
+                        <label><input type="radio" name="q7" value="50-80"> 50–80% (больше в офисе)</label>
+                        <label><input type="radio" name="q7" value="20-50"> 20–50% (больше дома, но регулярно в офисе)</label>
+                        <label><input type="radio" name="q7" value="0-20"> 0–20% (в основном удалённо)</label>
+                        <label><input type="radio" name="q7" value="0"> 0% (полностью удалённо)</label>
+                    </div>
+                </div>
+
+                <!-- Блок утверждений (8-21) -->
+                <div class="section-title">
+                    <h3>Оцените следующие утверждения</h3>
+                </div>
+
+                {% set statements = [
+                    "В моей работе скорость ответа считается важным показателем профессионализма.",
+                    "Я обрабатываю рабочую почту преимущественно «на потоке».",
+                    "В рабочей коммуникации от меня чаще ожидают быстрый ответ, чем вдумчивый.",
+                    "В моей организации ожидается постоянная доступность сотрудников.",
+                    "Я обычно предполагаю, что письма внутри корпоративной системы безопасны.",
+                    "Я чувствую давление необходимости отвечать на сообщения как можно скорее.",
+                    "Соблюдение процедур безопасности требует слишком много времени.",
+                    "Я доверяю встроенным системам фильтрации корпоративной почты.",
+                    "Я считаю коллег, которые долго отвечают на письма, ненадёжными.",
+                    "Если сообщение дошло до моего рабочего ящика, я скорее считаю его безопасным.",
+                    "Я обычно проверяю подозрительные сообщения перед тем, как действовать.",
+                    "Я знаю основные признаки фишинговых писем.",
+                    "Я считаю себя внимательным в вопросах цифровой безопасности.",
+                    "Правила информационной безопасности усложняют рабочие процессы."
+                ] %}
+
+                {% for i in range(14) %}
+                <div class="question">
+                    <p>{{ i+8 }}. {{ statements[i] }}</p>
+                    <div class="likert-scale">
+                        <label><input type="radio" name="q{{ i+8 }}" value="5" required> Совершенно согласен</label>
+                        <label><input type="radio" name="q{{ i+8 }}" value="4"> Скорее согласен</label>
+                        <label><input type="radio" name="q{{ i+8 }}" value="3"> Нейтрален</label>
+                        <label><input type="radio" name="q{{ i+8 }}" value="2"> Скорее не согласен</label>
+                        <label><input type="radio" name="q{{ i+8 }}" value="1"> Совершенно не согласен</label>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <!-- Демография -->
+                <div class="section-title">
+                    <h3>Уточняющие вопросы</h3>
+                </div>
+
+                <div class="question">
+                    <p>22. В какой сфере Вы работаете?</p>
+                    <div class="radio-group">
+                        <label><input type="radio" name="q22" value="it" required> IT / цифровые технологии</label>
+                        <label><input type="radio" name="q22" value="finance"> Финансы / банки / страхование</label>
+                        <label><input type="radio" name="q22" value="consulting"> Консалтинг / проф. услуги</label>
+                        <label><input type="radio" name="q22" value="government"> Государственный сектор</label>
+                        <label><input type="radio" name="q22" value="education"> Образование / наука</label>
+                        <label><input type="radio" name="q22" value="marketing"> Маркетинг / реклама / медиа</label>
+                        <label><input type="radio" name="q22" value="trade"> Торговля / e-commerce</label>
+                        <label><input type="radio" name="q22" value="manufacturing"> Производство / промышленность</label>
+                        <label><input type="radio" name="q22" value="logistics"> Логистика / транспорт</label>
+                        <label><input type="radio" name="q22" value="telecom"> Телекоммуникации</label>
+                        <label><input type="radio" name="q22" value="healthcare"> Здравоохранение</label>
+                        <label><input type="radio" name="q22" value="tourism"> Туризм</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p>23. Есть ли у Вас в настоящее время подчинённые?</p>
+                    <div class="radio-group">
+                        <label><input type="radio" name="q23" value="yes" required> Да</label>
+                        <label><input type="radio" name="q23" value="no"> Нет</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p>24. Какой у вас уровень образования?</p>
+                    <div class="radio-group">
+                        <label><input type="radio" name="q24" value="secondary" required> Среднее</label>
+                        <label><input type="radio" name="q24" value="vocational"> Среднее профессиональное</label>
+                        <label><input type="radio" name="q24" value="incomplete_higher"> Неоконченное высшее</label>
+                        <label><input type="radio" name="q24" value="higher"> Высшее (бакалавр/специалист/магистр)</label>
+                        <label><input type="radio" name="q24" value="degree"> Учёная степень</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p>25. К какой возрастной группе вы относитесь?</p>
+                    <div class="radio-group">
+                        <label><input type="radio" name="q25" value="18-29" required> 18-29</label>
+                        <label><input type="radio" name="q25" value="30-39"> 30-39</label>
+                        <label><input type="radio" name="q25" value="40-49"> 40-49</label>
+                        <label><input type="radio" name="q25" value="50-59"> 50-59</label>
+                        <label><input type="radio" name="q25" value="60+"> 60+</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p>26. Укажите ваш пол.</p>
+                    <div class="radio-group">
+                        <label><input type="radio" name="q26" value="male" required> Мужской</label>
+                        <label><input type="radio" name="q26" value="female"> Женский</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">Перейти к эксперименту</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
